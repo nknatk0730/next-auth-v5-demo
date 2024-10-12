@@ -6,7 +6,9 @@ import { z } from 'zod';
 import { getUserByEmail } from '@/db/user';
 import { handleError } from '@/lib/utils';
 import prisma from '@/lib/db';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
+import { sendVerificationEmail } from '@/lib/mail';
+import { generateVerificationToken } from '@/lib/tokens';
 
 export const signUp = async (
   values: z.infer<typeof signUpSchema>
@@ -46,9 +48,15 @@ export const signUp = async (
       },
     });
 
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+
     return {
       isSuccess: true,
-      message: 'サインアップに成功しました。',
+      message: '確認メールを送信しました。',
     };
   } catch (error) {
     handleError(error);
