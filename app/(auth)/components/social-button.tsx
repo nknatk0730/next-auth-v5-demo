@@ -8,10 +8,14 @@ import { Button } from '@/components/ui/button';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 
 export const SocialButtons = () => {
-  const handleClick = (provider: 'google' | 'github') => {
-    signIn(provider, {
-      callbackUrl: DEFAULT_LOGIN_REDIRECT,
-    });
+  const handleClick = async (provider: 'google' | 'github') => {
+    try {
+      await signIn(provider, {
+        callbackUrl: DEFAULT_LOGIN_REDIRECT,
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
@@ -29,7 +33,7 @@ export const SocialButtons = () => {
         size='lg'
         className='w-full'
         variant='outline'
-        onClick={() => handleClick('github')}
+        onClick={ () => handleClick('github')}
       >
         <FaGithub className='h-5 w-5' />
         <span className='ml-2'>GitHub</span>
