@@ -3,7 +3,7 @@
 import * as z from 'zod';
 import bcrypt from 'bcryptjs';
 
-import { update as updateByAuthJs, auth } from '@/auth';
+import { unstable_update as updateByAuthJs, auth } from '@/auth';
 import { generateVerificationToken } from '@/lib/tokens';
 import { sendVerificationEmail } from '@/lib/mail';
 import { editProfileSchema } from '@/schemas';
@@ -26,7 +26,7 @@ export const editProfile = async (
     };
   }
 
-  const dbUser = await getUserById(user.id);
+  const dbUser = await getUserById(user.id!);
 
   if (!dbUser) {
     return {

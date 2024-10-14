@@ -8,11 +8,11 @@ import { getAccountByUserId } from './db/accounts';
 import { getTwoFactorConfirmationByUserId } from './db/two-factor-confirmation';
 
 export const {
-  handlers: { GET, POST },
+  handlers,
   auth,
   signIn,
   signOut,
-  update,
+  unstable_update,
 } = NextAuth({
   pages: {
     signIn: '/signin',
@@ -29,7 +29,7 @@ export const {
     async signIn({ user, account }) {
       if (account?.provider !== 'credentials') return true;
 
-      const existingUser = await getUserById(user.id);
+      const existingUser = await getUserById(user.id!);
 
       if (!existingUser?.emailVerified) return false;
 
@@ -55,7 +55,7 @@ export const {
       }
       if (session.user) {
         session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.email = token.email!;
       }
       if (token.role && session.user) {
         session.user.role = token.role as UserRole;
